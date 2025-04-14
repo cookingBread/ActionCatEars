@@ -16,7 +16,7 @@ struct gyr
     int16_t ax, ay, az;
     int16_t gx, gy, gz;
     String toString(){
-        return "ax:"+String(ax)+" ay"+String(ay)+" az"+String(az)+" gx"+String(gx)+" gy"+String(gy)+" gz"+String(gz);
+        return "ax:"+String(ax)+" ay:"+String(ay)+" az:"+String(az)+" gx:"+String(gx)+" gy:"+String(gy)+" gz:"+String(gz);
     }
 } gyr;
 
@@ -24,17 +24,19 @@ struct gyr
 
 extern void log(String msg);
 extern void init_i2c_gyroscope();
-extern void get_gyroscope();
+extern void recive_gyroscope();
+
 
 void setup() {
     // 配置串口
     Serial.begin(115200);
+    delay(3000); // todo:给时间打开串口
     log("Serial speed 115200");
 
     // 配置蓝牙
     // SerialBT.begin("ESP32_Blue");
 
-    delay(3000); // todo:
+
     // 配置 I2C
     Wire.begin(I2C_SDA, I2C_SCL);
     init_i2c_gyroscope();
@@ -42,7 +44,9 @@ void setup() {
 
 void loop() {
     // SerialBT.println("Hello from ESP32");
-    Serial.println(gyr.toString());
+    log(gyr.toString());
+    recive_gyroscope();
+    delay(500);
 }
 
 void init_i2c_gyroscope(){

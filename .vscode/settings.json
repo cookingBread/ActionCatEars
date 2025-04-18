@@ -11,5 +11,12 @@
         "memory": "cpp",
         "random": "cpp",
         "initializer_list": "cpp"
-    }
+    },
+    "terminal.integrated.profiles.windows": {
+        "GitBash": {
+            "path": "E:\\Git\\bin\\bash.exe", //注意是bash.exe而不是git-bash.exe
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "GitBash"
+    
 }

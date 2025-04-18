@@ -10,10 +10,10 @@
 #define I2C_SDA 17
 #define I2C_SCL 16
 #define I2C_ADDR_GYR 0x68  // gyroscope陀螺仪
-#define SERVO_LEFT_DOWN 0  //todo:
-#define SERVO_LEFT_UP 0
-#define SERVO_RIGHT_DOWN 0
-#define SERVO_RIGHT_UP 0
+#define SERVO_LEFT_DOWN 13  //todo:
+#define SERVO_LEFT_UP 12
+#define SERVO_RIGHT_DOWN 14
+#define SERVO_RIGHT_UP 27
 
 BluetoothSerial SerialBT;         //定义一个蓝牙串口对象名称
 
@@ -34,16 +34,17 @@ struct gyr
 } gyr;
 
 // 舵机控制
-extern Servo servo_ld,servo_lu,servo_rd,servo_ru;
 extern void init_servos();
-extern void servos_write();
+extern void servos_write(int lu, int ld, int ru, int rd);
+
+Servo servo_ld,servo_lu,servo_rd,servo_ru;
 
 // 耳朵控制
-extern void ears_down(){}
-extern void ears_up(){}
-extern void ears_to_forward(){}
-extern void ears_to_left(){}
-extern void ears_to_right(){}
+extern void ears_down();
+extern void ears_up();
+extern void ears_to_forward();
+extern void ears_to_left();
+extern void ears_to_right();
 
 
 void setup() {
@@ -55,17 +56,26 @@ void setup() {
     // 配置蓝牙
     // SerialBT.begin("ESP32_Blue");
 
-
     // 配置 I2C
     Wire.begin(I2C_SDA, I2C_SCL);
     init_i2c_gyroscope();
+    // 配置舵机
+    init_servos();
 }
 
 void loop() {
     // SerialBT.println("Hello from ESP32");
-    log(gyr.toString());
-    recive_gyroscope();
-    delay(200);
+    // log(gyr.toString());
+    // recive_gyroscope();
+
+    ears_to_left();
+    delay(500);
+    ears_to_forward();
+    delay(500);
+    ears_to_right();
+    delay(500);
+    ears_to_forward();
+    delay(1500);
 }
 
 // ******陀螺仪******
@@ -109,17 +119,25 @@ void init_servos(){
  * @return {*}
  */
 void servos_write(int lu, int ld, int ru, int rd){
-    servo_lu.write(0);
-    servo_ld.write(0);
-    servo_ru.write(0);
-    servo_rd.write(0);
+    if(lu>-1)servo_lu.write(lu);
+    if(ld>-1)servo_ld.write(180-ld);
+    if(ru>-1)servo_ru.write(180-ru);
+    if(rd>-1)servo_rd.write(180-rd);
 }
 
 // ***耳朵控制***
 void ears_down(){
-
+    servos_write(0,-1,0,-1);
 }
-void ears_up(){}
-void ears_to_forward(){}
-void ears_to_left(){}
-void ears_to_right(){}
+void ears_up(){
+    servos_write(90,-1,90,-1);
+}
+void ears_to_forward(){
+    servos_write(-1,90,-1,90);
+}
+void ears_to_left(){
+    servos_write(-1,0,-1,0);
+}
+void ears_to_right(){
+    servos_write(-1,180,-1,180);
+}

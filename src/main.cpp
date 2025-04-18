@@ -21,11 +21,14 @@ struct gyr
 } gyr;
 
 
-
+// 日志函数
 extern void log(String msg);
+// 陀螺仪
 extern void init_i2c_gyroscope();
 extern void recive_gyroscope();
+// 舵机控制
 
+// 集成
 
 void setup() {
     // 配置串口
@@ -46,7 +49,7 @@ void loop() {
     // SerialBT.println("Hello from ESP32");
     log(gyr.toString());
     recive_gyroscope();
-    delay(500);
+    delay(200);
 }
 
 void init_i2c_gyroscope(){
